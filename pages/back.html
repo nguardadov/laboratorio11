@@ -28,7 +28,7 @@
                     //creamos una tarea
                     document.querySelector("#addTask").addEventListener('submit', function (e) {
                         e.preventDefault(); // evitar que se recargue la pagina del navegador
-                        var url = 'http://localhost/labo11/api/createTask.php'; //URL del api a consumir
+                        var url = 'http://localhost/task/api/createTask.php'; //URL del api a consumir
                         var data = {
                             /*Valores obtenidos en el formulario*/
                             task: document.forms['addTask']['task'].value,
@@ -54,7 +54,7 @@
                     
                     document.querySelector("#updateTask").addEventListener('submit', function (e) {
                         e.preventDefault();
-                        var url = 'http://localhost/labo11/api/updateTask.php';
+                        var url = 'http://localhost/task/api/updateTask.php';
                         var data = {
                             id: document.forms['updateTask']['idU'].value,
                             task: document.forms['updateTask']['taskU'].value,
@@ -81,18 +81,18 @@
                     function tasks() {
                         let tableTask = document.querySelector('#tareas');
                         let infoTask = "";
-                        fetch('http://localhost/labo11/api/tasks.php')
+                        fetch('http://localhost/task/api/tasks.php')
                             .then(function (response) {
                                 return response.text();
                             }).then(function (data) {
                                 JSON.parse(data).forEach(element => {
-                                    infoTask = infoTask + &#96;&lt;tr&gt
+                                    infoTask = infoTask + &#96;&lt;tr&gt;
                                         &lt;td&gt;${element.id}&lt;/td&gt;
                                         &lt;td>${element.task}&lt;/td&gt;
                                         &lt;td>${element.date_task}&lt;/td&gt;
                                         &lt;td&gt;
-                                            &lt;a href="http://localhost/labo11/api/task.php/${element.id}" class="update btn btn-primary btn-sm update" data-toggle="modal" data-target="#update"&gt;Actualizar&lt;/a&gt;
-                                            &lt;a href="http://localhost/labo11/api/deleteTask.php/${element.id}" class="delete btn btn-danger btn-sm"&gt;Eliminar&lt;/a&gt;
+                                            &lt;a href="http://localhost/task/api/task.php/${element.id}" class="update btn btn-primary btn-sm update" data-toggle="modal" data-target="#update"&gt;Actualizar&lt;/a&gt;
+                                            &lt;a href="http://localhost/task/api/deleteTask.php/${element.id}" class="delete btn btn-danger btn-sm"&gt;Eliminar&lt;/a&gt;
                                         &lt;/td&gt;
                                     &lt;/tr&gt;&#96;;
                                 });
@@ -115,7 +115,7 @@
                                     });
                                 });
                     
-                                /*Metod para actualizar */
+                                /*Metodo para actualizar */
                                 //buscar un producto
                                 let updates = document.querySelectorAll(".update");
                                 
