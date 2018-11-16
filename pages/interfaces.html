@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+    <title>Interfaces</title>
+  </head>
+  <body>
+    <header>
+      <div class="text-center">
+        <h1>Guia de laboratorio #11</h1>
+        <h2><code>Interfaces</code> </h2>
+      </div>
+    </header>
+    <div class="container mt-5 card">
+      <ol class="mt-5">
+        <li>
+          Creamos el archivo <code>metodos.php</code> dentro de la carpeta <code>interfaces</code>.
+        </li>
+        <li>
+          Para crear <code>interfaces</code> en PHP lo hacemos de la siguiente forma:
+          <br>
+          <pre>
+            <code class='PHP'>
+              &lt;?php
+                  //con la palabara reserveda <code>interface</code> creamos una interface
+                  interface metodos
+                  {
+                     //M&eacute;todo para recuperar todas la tareas
+                      public function readAll();
+
+                      //M&eacute;todo para crear una tarea recibe como parametro un objeto de tipo Task
+                      public function create($task);
+
+                      //M&eacute;todo para recuperar para eliminar una tarea recibe como parametro el id de la tarea
+                      public function delete($id);
+
+                      //M&eacute;todo para traer una tarea, recibe como parametro el id de la tarea
+                      public function read($id); //obteniendo el id
+
+                      //M&eacute;todo para actualizar una tarea, este recibe como parametro un objeto Task el cual tiene los datos que se modificaron
+                      public function update($task);
+                  }
+              ?&gt;
+            </code>
+          </pre>
+        </li>
+      </ol>
+      <div>
+        <a href="../index/index.html" class="btn btn-primary mb-2 ml-2">Inicio</a>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

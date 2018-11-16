@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+  <title>Instalacion</title>
+</head>
+<body>
+  <header>
+    <div class="text-center">
+      <h1>Guia de laboratorio #11</h1>
+      <h2>Instalaci&oacute;n de <code>PHP</code> y <code>MYSQL</code> en <code>Ubuntu</code> </h2>
+    </div>
+  </header>
+  <div class="container mt-5 card">
+    <ol class="mt-4">
+      <li>
+        Abrimos un terminal.
+      </li>
+      <li class="mt-1">
+        En la terminal actualizamos las dependencias por medio del seguinete comando:
+        <code>
+            sudo apt-get update
+        </code>.
+      </li>
+      <!--instalacion de mariadb-->
+      <li class="mt-1">
+        <p>
+            Procedermso a instalar el motor de base de datos de <code>MYSQL</code>, por medio del siguiente comando: <code>sudo apt-get install mariadb-server mariadb-client</code>
+        </p>
+        <p>
+          Ahora configuraremos el acceso por contrase&ntilde;a a nuestro servidor <code>MYSQL</code>, ejecutando en la terminal el siguiente
+          comando <code>sudo mysql_secure_installation</code>; ac&aacute; nos pedira la nueva contrase&ntilde;a para el usuario root.
+          <br>
+          Nota: Para las demas opciones las dejaremos por defecto.
+          <br>
+          para acceder a nuestro motor de bases de datos abriremos un terminal y ejecutaremos el siguiente comando <code>mysq -u root -p</code>
+        </p>
+        </p>
+      </li>
+      <!---->
+      <li class="mt-1">
+        <p>
+          Instalaremos el servidor de <code>Apache2</code> para poder trabajar con <code>PHP</code>, para hacerlos debemos
+          ejecutar el siguiente comando: <code>sudo apt-get install apache2</code>
+        </p>
+        <p>
+          Para comprobar que se instalo corectamente, debemos ingresar al navegador de nuestra preferencia y en la barra de direcciones,
+          escribimos <code>localhost</code>, nos debera mostrar la pantalla de bienvenida de apache.
+        </p>
+      </li>
+      <li class="mt-1">
+        <p>Instalaremos php en su ultima version por medio de la siguiente instrucci&oacute;n
+          <code>sudo apt-get install php libapache2-mod-php  libmcrypt-dev php-mysql</code>
+      </li>
+      <li class="mt-1">
+        <p>
+          Para poder instalar <code>phpmyadmin</code> lo hacemos de la siguiente fomra:
+          <ol>
+            <li>
+              Ejecutamos el siguiente comando <code>sudo apt-get install phpmyadmin</code>
+            </li>
+            <li>
+              En el proceso de instlaci&oacute;n , nos preguntara en que servidor se ejecutara <code>phpmyadmin</code>, nosotros seleccionaremos <code>apache2</code>.
+              [colocar imagen]
+            </li>
+            <li>
+              Seleccionaremos en no en la ventana que se nos abrira. [colocar imagen]
+            </li>
+            <li>
+              Una vez terminada la instalaci&oacute;n, nos dirigimos a nuestro navegador y en la url escribimos <code>localhost/phpmyadmin</code>. Al momento de logearse nos aparece
+              el siguiente error [insertar imagen]. Esto se debe a una configuraci&oacute; del plugin de mysql para que el usuario no pueda conectarse por
+              el protocolo <code>TCP/I¨p</code> lo resolvemos de la siguiente manera:
+              <ul>
+                <li>
+                  Ingresamos al temrinal y colocamos el siguiente comando
+                  <br><code>sudo mysql -u root -p</code>, para ingresar a la consola de <code>mysql</code>
+                </li>
+                <li>
+                  En la consola de <code>mysql</code>, escribimos <code>use mysql</code>
+                </li>
+                <li>
+                  Ejecutamos la consulta <code class="SQL">select user, plugin from user;</code>
+                </li>
+                <li>
+                  Corremos la siguiente instrucci&oacute;n <code>update user set plugin ='' where root = ''</code>
+                </li>
+                <li>
+                  Por &uacute;ltimo ejecutamos <code>flush privileges;</code>
+                </li>
+              </ul>
+            </li>
+          </ol>
+        </p>
+      </li>
+    </ol>
+    <div>
+      <a href="../index/index.html" class="btn btn-primary mb-2 ml-2">Inicio</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>

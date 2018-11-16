@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+    <title>Creaci&oacute;n de modelos</title>
+    <title>Conexi&oacute;n a la base de datos</title>
+  </head>
+  <body>
+    <header>
+      <div class="text-center">
+        <h1>Guia de laboratorio #11</h1>
+        <h2>conexi&oacuten a <code>MYSQL</code></h2>
+      </div>
+    </header>
+    <div class="container mt-5 card">
+      <ol>
+        <li>
+          Crearemmos dentro de la carpeta <code>connecion</code> el archivo <code>Connecion.php</code>
+        </li>
+        <li>
+          <p>Para realizar la conexi&oacute;n a la base de datos haremos uso del patr&oacute;n de dise&ntilde;o <code>Singleton</code>. El cual se aplicara de la siguiente manera</p>
+          <pre>
+            <code class="PHP">
+              &lt;?php
+              //creamos la clase conexi&oacute;n
+                class Connecion
+                 {
+                     /*Definimos la varible que tendran las credenciales de nuestra base de datos*/
+                     private $user;
+                     private $pass;
+                     private $db;
+                     private $host;
+
+                     //variable que almacenara la instancia de la clase Connecion
+                     private static $instance = null;
+
+                     //variable que almacenara la conexi&oacute;n
+                     private $cnx;
+
+                     //Constructor de la clase
+                     private function __construct() {
+
+                       //cargamos las credenciales
+                         Connecion::credenciales();
+
+                        //con el objeto <code>mysql</code> abrimos la conexi&oacute;n a nuestra base de datos
+                        //esta recibe como par&aacute;metros el nombre del host, usuario de base de datos, password de la base de datos, nombre de la base de datos
+                         $this->cnx = new mysqli($this->host,$this->user,$this->pass,$this->db);
+
+                         //verificamos si hubo error en la conexi&oacute;n
+                         if($this->cnx->connect_errno)
+                         {
+
+                             echo $this->cnx->connect_errno;  // mostraremos el error
+                         }
+                     }
+
+                     //M&eacute;todo para crear la instancia de la base datos
+                     public static function getInstance()
+                     {
+                        //self hacemos referencia a una variable de tipo static, la cual es parte de la clase.
+                         if(self::$instance == null)
+                         {
+                             self::$instance = new Connecion();
+                         }
+                         return self::$instance;
+                     }
+
+                     //cargamos las credenciales
+                     private function credenciales()
+                     {
+                         $this->user="root";
+                         $this->pass=""; //para el caso de los laboratorios
+                         $this->db="labo11";
+                         $this->host = "localhost";
+                     }
+
+                     //Obtenemos la conexi&oacute;n de la base de datos
+                     public function getCnx()
+                     {
+                         return $this->cnx;
+                     }
+                     //Cerramos la conexi&oacute;n a la base de datos
+                     public function close()
+                     {
+                         self::$instance=null;
+                     }
+                 }
+              ?&gt;
+            </code>
+          </pre>
+        </li>
+      </ol>
+      <div>
+        <a href="../index/index.html" class="btn btn-primary mb-2 ml-2">Inicio</a>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

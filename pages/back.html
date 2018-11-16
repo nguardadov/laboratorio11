@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+    <title>Cliente js</title>
+</head>
+
+<body>
+    <header>
+        <div class="text-center">
+            <h1>Guia de laboratorio #11</h1>
+            <h2>Consumiendo Rest-Api</h2>
+        </div>
+    </header>
+    <div class="container mt-5">
+        <p>
+            Dentro de la carpeta <code>public</code>, crearemos el archivo <code>test.js</code>, este archivo
+            tendra todos los m&eacute;todos para traer y enviar datos al <code>API</code>.
+            <pre>
+               <code class="JS">
+                    tasks(); //mostrar todoas las tareas
+
+                    //creamos una tarea
+                    document.querySelector("#addTask").addEventListener('submit', function (e) {
+                        e.preventDefault(); // evitar que se recargue la pagina del navegador
+                        var url = 'http://localhost/labo11/api/createTask.php'; //URL del api a consumir
+                        var data = {
+                            /*Valores obtenidos en el formulario*/
+                            task: document.forms['addTask']['task'].value,
+                            date: document.forms['addTask']['date'].value
+                        };
+                        /*El m&eacute;todo fetch nos permite establece la conexi&oacute; con el API*/
+                        fetch(url, {
+                            method: 'POST',
+                            body: JSON.stringify(data), //Parseamos a string el objeto data
+                            headers:
+                            {
+                                'Content-Type': 'application/json'
+                            }
+                        }).then(res => res.json())
+                            .catch(error => console.error('Error:', error))
+                            .then(function (response) {
+                                console.log({ "Success": response.message });
+                                tasks(); //refrescamos la lista de tareas
+                            });
+                    });
+                    
+                    //actualizar data
+                    
+                    document.querySelector("#updateTask").addEventListener('submit', function (e) {
+                        e.preventDefault();
+                        var url = 'http://localhost/labo11/api/updateTask.php';
+                        var data = {
+                            id: document.forms['updateTask']['idU'].value,
+                            task: document.forms['updateTask']['taskU'].value,
+                            date: document.forms['updateTask']['dateU'].value
+                        };
+                        fetch(url, {
+                            method: 'PUT',
+                            body: JSON.stringify(data),
+                            headers:
+                            {
+                                'Content-Type': 'application/json'
+                            }
+                        }).then(res => res.json())
+                            .catch(error => console.error('Error:', error))
+                            .then(function (response) {
+                                console.log({ "Success": response.message });
+                                document.querySelector()
+                                tasks();
+                            });
+                    });
+                    
+                    
+                    //mostrar tareas
+                    function tasks() {
+                        let tableTask = document.querySelector('#tareas');
+                        let infoTask = "";
+                        fetch('http://localhost/labo11/api/tasks.php')
+                            .then(function (response) {
+                                return response.text();
+                            }).then(function (data) {
+                                JSON.parse(data).forEach(element => {
+                                    infoTask = infoTask + &#96;&lt;tr&gt
+                                        &lt;td&gt;${element.id}&lt;/td&gt;
+                                        &lt;td>${element.task}&lt;/td&gt;
+                                        &lt;td>${element.date_task}&lt;/td&gt;
+                                        &lt;td&gt;
+                                            &lt;a href="http://localhost/labo11/api/task.php/${element.id}" class="update btn btn-primary btn-sm update" data-toggle="modal" data-target="#update"&gt;Actualizar&lt;/a&gt;
+                                            &lt;a href="http://localhost/labo11/api/deleteTask.php/${element.id}" class="delete btn btn-danger btn-sm"&gt;Eliminar&lt;/a&gt;
+                                        &lt;/td&gt;
+                                    &lt;/tr&gt;&#96;;
+                                });
+                                tableTask.innerHTML = infoTask;
+                                /*Metodo para eliminar */
+                                let deletes = document.querySelectorAll(".delete");
+                                deletes.forEach(item => {
+                                    let context = this;
+                                    item.addEventListener('click', function (e) {
+                                        e.preventDefault();
+                                        let url = this['href'];
+                                        fetch(url, {
+                                            method: 'delete'
+                                        }).then(response => response.json())
+                                            .catch(error => console.error('Error:', error))
+                                            .then(function (response) {
+                                                console.log({ "Success": response.message });
+                                                tasks();
+                                            });
+                                    });
+                                });
+                    
+                                /*Metod para actualizar */
+                                //buscar un producto
+                                let updates = document.querySelectorAll(".update");
+                                
+                                updates.forEach(item=>{
+                                    item.addEventListener("click",function(e){
+                                        e.preventDefault();
+                                        let url = this['href'];
+                                        fetch(url,{
+                                            method: "get"
+                                        }).then(function(response){
+                                            return response.text();
+                                        }).then(function(data){
+                                            
+                                            let task = JSON.parse(data);
+                                            let formUpdateTask = document.querySelector('#updateTask');
+                                            formUpdateTask.idU.value=task.id;
+                                            formUpdateTask.taskU.value = task.task;
+                                            formUpdateTask.dateU.value = task.date_task;
+                                            console.log(formUpdateTask.taskU);
+                                            tasks();
+                                        });
+                                    });
+                                });
+                            }).catch(function (err) {
+                                console.log(err);
+                            })
+                    }
+               </code>
+           </pre>
+        </p>
+        <div>
+            <a href="../index/index.html" class="btn btn-primary mb-2 ml-2">Inicio</a>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>

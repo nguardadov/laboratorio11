@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+  <title>Creaci&oacute;n de API</title>
+</head>
+
+<body>
+  <header>
+    <div class="text-center">
+      <h1>Guia de laboratorio #11</h1>
+      <h2>Creaci&oacute;n de la API</h2>
+    </div>
+  </header>
+  <div class="container mt-5 card">
+    <p>Dentro de la carpeta <code>api</code> crearemos los siguientes archivos:</p>
+    <ol>
+      <li>
+        Crearemos el archivo <code>createTask.php</code> el cual tendra el siguiente contenido:
+        <pre>
+            <code class="PHP">
+              &lt;?php
+                 header("Access-Control-Allow-Origin: *");
+                 header("Content-Type: application/json; charset=UTF-8");
+                 header("Access-Control-Allow-Methods: POST");
+                 header("Access-Control-Max-Age: 3600");
+                 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+                 require('../dao/TaskDao.php');
+
+                 //extraemos los datos que enviamos el body de la peticion
+                 $data = json_decode(file_get_contents("php://input"));
+
+                  //creamos un objeto de tipo Task
+                 $task = new Task();
+                 //Agregamos los datos traidos de la petici&oacute;n
+                 $task->setTask($data->task);
+                 $task->setDateTask($data->date);
+
+                //creamo un objeto de tipo TaskDao
+                 $dao = new TaskDao();
+
+                 /*Validamos si los datos fueron insertados de forma correcta*/
+                 if($dao->create($task))
+                 {
+                  http_response_code(201);
+                  //convertimos el mensaje a JSON
+                  echo json_encode(array("message" => "Tarea creada con exito")); 
+                 }
+                 else{
+                  http_response_code(500);
+                  echo json_encode(array('message'=>'error'));
+                 }
+
+              ?&gt;
+            </code>
+          </pre>
+      </li>
+      <li>
+        Crearemos el archivo <code>deleteTask.php</code> el cual tendra el siguiente contenido:
+        <pre>
+            <code class="PHP">
+                &lt;?php
+                header("Access-Control-Allow-Origin: *");
+                header("Content-Type: application/json; charset=UTF-8");
+                header("Access-Control-Allow-Methods: DELETE");
+                header("Access-Control-Max-Age: 3600");
+                header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+                require('../dao/TaskDao.php');
+                
+                /*Obtenemos los datos enviado atraves del metodo delete*/
+                $request = explode("/", substr(@$_SERVER['PATH_INFO'],1));
+
+                /*obtenemos el valor enviado*/
+                $id = $request[0];
+
+                /*creamos un objeto de tipo TaskDAO*/
+                $dao = new TaskDao();
+                /*Enviamos el id*/
+                $dao->delete($id);
+
+                http_response_code(200);
+                echo json_encode(array("message" => "Product was deleted."));
+                ?&gt;
+            </code>
+          </pre>
+      </li>
+      <li>
+        Crearemos el archivo <code>task.php</code> con el siguiente conentido:
+        <pre>
+            <code class="PHP">
+              &lt;?php
+                /*Este archivo nos permitira recibir los datos enviados
+                  desde un cliente y ser almacenos en una base de datos
+                */
+                header("Access-Control-Allow-Origin: *");
+                header("Content-Type: application/json; charset=UTF-8");
+                header("Access-Control-Allow-Methods: DELETE");
+                header("Access-Control-Max-Age: 3600");
+                header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+                require('../dao/TaskDao.php');
+            
+                $request = explode("/", substr(@$_SERVER['PATH_INFO'],1));
+                $id = $request[0];
+                $dao = new TaskDao();
+                http_response_code(200);
+                echo json_encode($dao->read($id));
+              ?&gt;
+            </code>
+          </pre>
+      </li>
+      <li>
+        Crearemos el archivo <code>tasks.php</code>, el cual tendra lo siguiente:
+        <pre>
+            <code class="PHP">
+              &lt;?php
+                /*Este archivo nos devolvera la lista de tareas*/
+
+                require('../dao/TaskDao.php');
+                $dao = new TaskDao();
+                http_response_code(200);
+                echo $dao->readAll();
+              ?&gt;
+            </code>
+          </pre>
+      </li>
+      <li>
+        Por ultimo crearemos el archivo <code>updateTask.php</code>
+        <pre>
+            <code class="PHP">
+              &lt;?php
+                header("Access-Control-Allow-Origin: *");
+                header("Content-Type: application/json; charset=UTF-8");
+                header("Access-Control-Allow-Methods: PUT");
+                header("Access-Control-Max-Age: 3600");
+                header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+                require('../dao/TaskDao.php');
+                //extraigo los datos
+                $data = json_decode(file_get_contents("php://input"));
+                
+                $task = new Task();
+                $task->setId($data->id);
+                $task->setTask($data->task);
+                $task->setDateTask($data->date);
+                $dao = new TaskDao();
+                if($dao->update($task))
+                {
+                 http_response_code(201);
+                 echo json_encode(array("message" => "Tarea Actualizada con exito"));
+                }
+                else{
+                 http_response_code(500);
+                 echo json_encode(array('message'=>'error '.$task->getTask()));
+                }
+              ?&gt;
+            </code>
+          </pre>
+      </li>
+    </ol>
+    <div>
+      <a href="../index/index.html" class="btn btn-primary mb-2 ml-2">Inicio</a>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>
